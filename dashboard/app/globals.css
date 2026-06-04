@@ -1,0 +1,178 @@
+@import "tailwindcss";
+
+/* ============================================================
+   JARVIS — Design tokens (baby-blue HUD)
+   Single source of truth. Claude Design handoffs should map
+   their tokens onto these. See CLAUDE.md.
+   ============================================================ */
+@theme {
+  /* Surfaces */
+  --color-bg: #06090f;
+  --color-bg-2: #0a0f1c;
+  --color-panel: #0d1424;
+  --color-panel-2: #121a2b;
+
+  /* Signature baby-blue accents */
+  --color-baby: #7cc4ff;
+  --color-glow: #5ba8ff;
+  --color-accent-soft: #a8d8ff;
+
+  /* Text */
+  --color-ink: #e8f1ff;
+  --color-muted: #8a9bb8;
+  --color-faint: #4a5a78;
+
+  /* Status */
+  --color-success: #5be7c4;
+  --color-warn: #ffc46b;
+  --color-danger: #ff7a8a;
+
+  /* Typography */
+  --font-display: var(--font-chakra), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ============================================================
+   Base canvas — deep navy with a faint HUD grid + soft glow
+   ============================================================ */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  background-image:
+    radial-gradient(1200px 800px at 80% -10%, rgba(91, 168, 255, 0.10), transparent 60%),
+    radial-gradient(900px 700px at 0% 110%, rgba(124, 196, 255, 0.06), transparent 55%),
+    linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-2) 100%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Faint blueprint grid behind everything (calm, low opacity) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(124, 196, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 196, 255, 0.035) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(circle at 50% 30%, black, transparent 85%);
+}
+
+/* Very subtle scanlines for the cinematic feel */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.014) 0px,
+    rgba(255, 255, 255, 0.014) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/* ============================================================
+   Reusable HUD utilities
+   ============================================================ */
+@layer components {
+  /* Frosted glass panel with glowing baby-blue edge */
+  .glass {
+    position: relative;
+    border-radius: 1rem;
+    background:
+      linear-gradient(180deg, rgba(18, 26, 43, 0.66), rgba(10, 15, 28, 0.66));
+    border: 1px solid rgba(124, 196, 255, 0.16);
+    backdrop-filter: blur(14px);
+    box-shadow:
+      0 1px 0 0 rgba(168, 216, 255, 0.06) inset,
+      0 0 0 1px rgba(6, 9, 15, 0.4),
+      0 18px 48px -24px rgba(0, 0, 0, 0.8);
+  }
+  /* Brighter, "active/selected" glass */
+  .glass-active {
+    border-color: rgba(124, 196, 255, 0.45);
+    box-shadow:
+      0 0 0 1px rgba(124, 196, 255, 0.25),
+      0 0 28px -6px rgba(91, 168, 255, 0.35),
+      0 18px 48px -24px rgba(0, 0, 0, 0.8);
+  }
+
+  /* Uppercase, letter-spaced micro label */
+  .hud-label {
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.66rem;
+    font-weight: 600;
+    color: var(--color-muted);
+    font-family: var(--font-display);
+  }
+
+  .glow-text {
+    text-shadow: 0 0 18px rgba(124, 196, 255, 0.55);
+  }
+
+  /* Corner brackets — a signature HUD touch for hero panels */
+  .hud-corners::before,
+  .hud-corners::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: rgba(124, 196, 255, 0.55);
+    pointer-events: none;
+  }
+  .hud-corners::before {
+    top: 8px;
+    left: 8px;
+    border-top: 1.5px solid;
+    border-left: 1.5px solid;
+    border-top-left-radius: 4px;
+  }
+  .hud-corners::after {
+    bottom: 8px;
+    right: 8px;
+    border-bottom: 1.5px solid;
+    border-right: 1.5px solid;
+    border-bottom-right-radius: 4px;
+  }
+}
+
+/* Thin baby-blue scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 196, 255, 0.3) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(124, 196, 255, 0.25);
+  border-radius: 999px;
+}
+
+::selection {
+  background: rgba(124, 196, 255, 0.3);
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
