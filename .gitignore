@@ -10,6 +10,12 @@ dashboard/out/
 .env.local
 .env.*.local
 
+# Obsidian workspace cruft (keep the markdown, ignore the per-vault UI state)
+vault/**/.obsidian/
+
+# Claude Agent SDK runtime artifacts
+**/.claude/
+
 # OS
 .DS_Store
 Thumbs.db
